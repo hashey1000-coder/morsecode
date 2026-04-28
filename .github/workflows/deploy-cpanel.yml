@@ -39,16 +39,20 @@ jobs:
       - name: Setup SSH
         run: |
           mkdir -p ~/.ssh
-          printf '%s\n' "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/id_ed25519
+          printf '%s' "${{ secrets.CPANEL_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
+          ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null || {
+            echo "Invalid CPANEL_SSH_KEY secret. Use an unencrypted private key and paste it exactly, including BEGIN/END lines."
+            exit 1
+          }
           ssh-keyscan -p "${CPANEL_PORT:-22}" -H "$CPANEL_HOST" >> ~/.ssh/known_hosts
 
       - name: Ensure remote target exists
         run: |
-          ssh -p "${CPANEL_PORT:-22}" "$CPANEL_USER@$CPANEL_HOST" "mkdir -p '$CPANEL_TARGET_DIR'"
+          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p "${CPANEL_PORT:-22}" "$CPANEL_USER@$CPANEL_HOST" "mkdir -p '$CPANEL_TARGET_DIR'"
 
       - name: Upload static export
         run: |
           rsync -avz --delete \
-            -e "ssh -p ${CPANEL_PORT:-22}" \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p ${CPANEL_PORT:-22}" \
             site/out/ "$CPANEL_USER@$CPANEL_HOST:$CPANEL_TARGET_DIR/"
