@@ -1,0 +1,54 @@
+name: Deploy to cPanel
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-cpanel-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      CPANEL_PORT: ${{ secrets.CPANEL_PORT }}
+      CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
+      CPANEL_USER: ${{ secrets.CPANEL_USER }}
+      CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Install site dependencies
+        run: npm ci --prefix site
+
+      - name: Build static site
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${CPANEL_PORT:-22}" -H "$CPANEL_HOST" >> ~/.ssh/known_hosts
+
+      - name: Ensure remote target exists
+        run: |
+          ssh -p "${CPANEL_PORT:-22}" "$CPANEL_USER@$CPANEL_HOST" "mkdir -p '$CPANEL_TARGET_DIR'"
+
+      - name: Upload static export
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${CPANEL_PORT:-22}" \
+            site/out/ "$CPANEL_USER@$CPANEL_HOST:$CPANEL_TARGET_DIR/"

@@ -1,0 +1,12 @@
+{
+  "name": "morsecodetranslator-workspace",
+  "private": true,
+  "scripts": {
+    "dev": "npm --prefix ./site run dev",
+    "build": "npm --prefix ./site run build",
+    "build:test": "npm --prefix ./site run build:test",
+    "export": "npm --prefix ./site run build",
+    "start": "npm --prefix ./site run start",
+    "preview:static": "cd ./site/out && python3 -m http.server 4173"
+  }
+}
