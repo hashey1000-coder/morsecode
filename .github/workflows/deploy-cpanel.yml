@@ -5,8 +5,13 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
 jobs:
   deploy:
+    name: Build & Deploy
     runs-on: ubuntu-latest
 
     steps:
@@ -31,9 +36,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.CPANEL_SSH_KEY }}" > ~/.ssh/id_ed25519
           chmod 600 ~/.ssh/id_ed25519
-          ssh-keyscan -H ${{ secrets.CPANEL_HOST }} >> ~/.ssh/known_hosts
+          ssh-keyscan -p 22 ${{ secrets.CPANEL_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Upload files
+      - name: Deploy site
         run: |
-          scp -r site/out/. \
-          ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_TARGET_DIR }}
+          tar czf site.tar.gz -C site/out .
+          scp -P 22 -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            site.tar.gz \
+            ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:~/site.tar.gz
+          ssh -p 22 -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=no \
+            ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }} \
+            "mkdir -p '${{ secrets.CPANEL_TARGET_DIR }}' && cd '${{ secrets.CPANEL_TARGET_DIR }}' && find . -mindepth 1 -maxdepth 1 ! -name '.well-known' -exec rm -rf {} + && tar xzf ~/site.tar.gz && rm ~/site.tar.gz"
