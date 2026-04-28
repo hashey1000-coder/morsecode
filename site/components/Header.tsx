@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { LOGO_URL } from '@/lib/site';
 
 type Child = { label: string; href: string };
@@ -59,10 +62,32 @@ const NAV: NavItem[] = [
 ];
 
 export default function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openSection, setOpenSection] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu on outside click
+  useEffect(() => {
+    if (!menuOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [menuOpen]);
+
+  // Close menu on route change (any link click inside menu)
+  function close() {
+    setMenuOpen(false);
+    setOpenSection(null);
+  }
+
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/75 border-b border-white/60 shadow-[0_1px_0_0_rgba(15,23,42,0.04),0_8px_24px_-8px_rgba(15,23,42,0.08)]">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <Link href="/" className="flex min-w-0 items-center gap-3 shrink group">
+        <Link href="/" onClick={close} className="flex min-w-0 items-center gap-3 shrink group">
           <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient shadow-glow ring-1 ring-white/40 transition-transform group-hover:scale-105">
             <img
               src={LOGO_URL}
@@ -123,43 +148,65 @@ export default function Header() {
           )}
         </nav>
 
-        {/* Mobile hamburger with nested dropdowns */}
-        <details className="lg:hidden relative group shrink-0">
-          <summary className="flex cursor-pointer list-none items-center gap-2 rounded-xl border border-ink-300/40 bg-white/90 px-3 py-2 text-sm font-semibold text-ink-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
-            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16"/></svg>
-            <span>Menu</span>
-          </summary>
-          <nav className="absolute right-0 top-full mt-3 max-h-[80vh] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-[1.75rem] border border-white/80 bg-white/95 p-2 shadow-2xl ring-1 ring-ink-900/5 backdrop-blur-xl">
-            <div className="mb-2 rounded-2xl border border-ink-200/70 bg-brand-gradient-soft px-4 py-3">
-              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-dark">Browse the site</p>
-              <p className="mt-1 text-sm text-ink-700">Quick links, word guides, and Morse learning resources.</p>
-            </div>
-            {NAV.map((n) =>
-              n.children ? (
-                <details key={n.href} className="group/details rounded-2xl bg-white/70 mb-1 last:mb-0">
-                  <summary className="mx-1 flex cursor-pointer list-none items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft">
-                    <span>{n.label}</span>
-                    <span className="text-xs text-ink-500">▾</span>
-                  </summary>
-                  <div className="mx-3 mb-3 rounded-xl border border-brand/10 bg-brand-gradient-soft px-2 py-2">
-                    <Link href={n.href} className="block rounded-lg px-3 py-2 text-sm font-bold text-brand-dark transition hover:bg-white/80">
-                      All {n.label}
-                    </Link>
-                    {n.children.map((c) => (
-                      <Link key={c.href} href={c.href} className="block rounded-lg px-3 py-2 text-sm text-ink-700 transition hover:bg-white/80 hover:text-brand-dark">
-                        {c.label}
-                      </Link>
-                    ))}
-                  </div>
-                </details>
-              ) : (
-                <Link key={n.href} href={n.href} className="mx-1 mb-1 block rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft hover:text-brand-dark last:mb-0">
-                  {n.label}
-                </Link>
-              )
+        {/* Mobile hamburger */}
+        <div ref={menuRef} className="lg:hidden relative shrink-0">
+          <button
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            aria-expanded={menuOpen}
+            className="flex items-center gap-2 rounded-xl border border-ink-300/40 bg-white/90 px-3 py-2 text-sm font-semibold text-ink-900 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+          >
+            {menuOpen ? (
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M6 18L18 6M6 6l12 12"/></svg>
+            ) : (
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.2} d="M4 6h16M4 12h16M4 18h16"/></svg>
             )}
-          </nav>
-        </details>
+            <span>{menuOpen ? 'Close' : 'Menu'}</span>
+          </button>
+
+          {menuOpen && (
+            <nav className="absolute right-0 top-full mt-3 max-h-[80vh] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-[1.75rem] border border-white/80 bg-white/95 p-2 shadow-2xl ring-1 ring-ink-900/5 backdrop-blur-xl">
+              <div className="mb-2 rounded-2xl border border-ink-200/70 bg-brand-gradient-soft px-4 py-3">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-brand-dark">Browse the site</p>
+                <p className="mt-1 text-sm text-ink-700">Quick links, word guides, and Morse learning resources.</p>
+              </div>
+              {NAV.map((n) =>
+                n.children ? (
+                  <div key={n.href} className="rounded-2xl bg-white/70 mb-1 last:mb-0">
+                    <button
+                      onClick={() => setOpenSection(openSection === n.href ? null : n.href)}
+                      className="w-full flex items-center justify-between rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft"
+                    >
+                      <span>{n.label}</span>
+                      <svg
+                        className={`w-4 h-4 text-ink-500 transition-transform duration-200 ${openSection === n.href ? 'rotate-180' : ''}`}
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    {openSection === n.href && (
+                      <div className="mx-3 mb-3 rounded-xl border border-brand/10 bg-brand-gradient-soft px-2 py-2">
+                        <Link href={n.href} onClick={close} className="block rounded-lg px-3 py-2 text-sm font-bold text-brand-dark transition hover:bg-white/80">
+                          All {n.label}
+                        </Link>
+                        {n.children.map((c) => (
+                          <Link key={c.href} href={c.href} onClick={close} className="block rounded-lg px-3 py-2 text-sm text-ink-700 transition hover:bg-white/80 hover:text-brand-dark">
+                            {c.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link key={n.href} href={n.href} onClick={close} className="mx-1 mb-1 block rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft hover:text-brand-dark last:mb-0">
+                    {n.label}
+                  </Link>
+                )
+              )}
+            </nav>
+          )}
+        </div>
       </div>
     </header>
   );
