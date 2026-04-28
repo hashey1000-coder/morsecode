@@ -13,12 +13,6 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    env:
-      CPANEL_PORT: ${{ secrets.CPANEL_PORT }}
-      CPANEL_HOST: ${{ secrets.CPANEL_HOST }}
-      CPANEL_USER: ${{ secrets.CPANEL_USER }}
-      CPANEL_TARGET_DIR: ${{ secrets.CPANEL_TARGET_DIR }}
-      CPANEL_SSH_KEY_B64: ${{ secrets.CPANEL_SSH_KEY_B64 }}
 
     steps:
       - name: Checkout repo
@@ -37,27 +31,12 @@ jobs:
       - name: Build static site
         run: npm run build
 
-      - name: Setup SSH
-        run: |
-          mkdir -p ~/.ssh
-          if [ -n "$CPANEL_SSH_KEY_B64" ]; then
-            printf '%s' "$CPANEL_SSH_KEY_B64" | base64 -d | tr -d '\r' > ~/.ssh/id_ed25519
-          else
-            printf '%s' "${{ secrets.CPANEL_SSH_KEY }}" | tr -d '\r' > ~/.ssh/id_ed25519
-          fi
-          chmod 600 ~/.ssh/id_ed25519
-          ssh-keygen -y -f ~/.ssh/id_ed25519 > /dev/null || {
-            echo "Invalid SSH key secret. Use an unencrypted private key. Prefer CPANEL_SSH_KEY_B64 to avoid formatting issues."
-            exit 1
-          }
-          ssh-keyscan -p "${CPANEL_PORT:-22}" -H "$CPANEL_HOST" >> ~/.ssh/known_hosts
-
-      - name: Ensure remote target exists
-        run: |
-          ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p "${CPANEL_PORT:-22}" "$CPANEL_USER@$CPANEL_HOST" "mkdir -p '$CPANEL_TARGET_DIR'"
-
-      - name: Upload static export
-        run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -p ${CPANEL_PORT:-22}" \
-            site/out/ "$CPANEL_USER@$CPANEL_HOST:$CPANEL_TARGET_DIR/"
+      - name: Deploy via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_TARGET_DIR }}
+          local-dir: site/out/
+          dangerous-clean-slate: false
