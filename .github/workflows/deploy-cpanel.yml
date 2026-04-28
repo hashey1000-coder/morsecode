@@ -35,3 +35,5 @@ jobs:
           server-dir: ${{ secrets.FTP_TARGET_DIR }}
           local-dir: site/out/
           dangerous-clean-slate: true
+          protocol: ftps
+          port: 21
