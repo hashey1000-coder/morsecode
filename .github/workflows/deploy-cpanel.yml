@@ -37,3 +37,8 @@ jobs:
         run: |
           scp -r site/out/. \
           ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_TARGET_DIR }}
+
+      - name: Upload Next assets explicitly
+        run: |
+          scp -r site/out/_next \
+          ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_TARGET_DIR }}
