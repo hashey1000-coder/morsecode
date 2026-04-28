@@ -1,3 +1,7 @@
+<IfModule LiteSpeed>
+  CacheDisable public /
+</IfModule>
+
 <IfModule mod_headers.c>
   <FilesMatch "\.(html?|txt|xml)$">
     Header set Cache-Control "no-cache, no-store, must-revalidate"
