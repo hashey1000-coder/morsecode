@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { LOGO_URL } from '@/lib/site';
 
@@ -65,6 +66,13 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
+  // Close menu whenever the route changes
+  useEffect(() => {
+    setMenuOpen(false);
+    setOpenSection(null);
+  }, [pathname]);
 
   // Close menu on outside click
   useEffect(() => {
@@ -78,7 +86,6 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [menuOpen]);
 
-  // Close menu on route change (any link click inside menu)
   function close() {
     setMenuOpen(false);
     setOpenSection(null);
