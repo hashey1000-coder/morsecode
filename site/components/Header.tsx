@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { LOGO_URL } from '@/lib/site';
 
 type Child = { label: string; href: string };
@@ -89,17 +89,8 @@ export default function Header() {
     setOpenSection(null);
   }
 
-  function handleMobileLinkClick(href: string) {
-    return (event: ReactMouseEvent<HTMLAnchorElement>) => {
-      event.preventDefault();
-      close();
-
-      if (href === pathname) {
-        return;
-      }
-
-      window.requestAnimationFrame(close);
-    };
+  function handleMobileLinkClick() {
+    close();
   }
 
   return (
@@ -205,11 +196,11 @@ export default function Header() {
                     </button>
                     {openSection === n.href && (
                       <div className="mx-3 mb-3 rounded-xl border border-brand/10 bg-brand-gradient-soft px-2 py-2">
-                        <Link href={n.href} onClick={handleMobileLinkClick(n.href)} className="block rounded-lg px-3 py-2 text-sm font-bold text-brand-dark transition hover:bg-white/80">
+                        <Link href={n.href} onClick={handleMobileLinkClick} className="block rounded-lg px-3 py-2 text-sm font-bold text-brand-dark transition hover:bg-white/80">
                           All {n.label}
                         </Link>
                         {n.children.map((c) => (
-                          <Link key={c.href} href={c.href} onClick={handleMobileLinkClick(c.href)} className="block rounded-lg px-3 py-2 text-sm text-ink-700 transition hover:bg-white/80 hover:text-brand-dark">
+                          <Link key={c.href} href={c.href} onClick={handleMobileLinkClick} className="block rounded-lg px-3 py-2 text-sm text-ink-700 transition hover:bg-white/80 hover:text-brand-dark">
                             {c.label}
                           </Link>
                         ))}
@@ -217,7 +208,7 @@ export default function Header() {
                     )}
                   </div>
                 ) : (
-                  <Link key={n.href} href={n.href} onClick={handleMobileLinkClick(n.href)} className="mx-1 mb-1 block rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft hover:text-brand-dark last:mb-0">
+                  <Link key={n.href} href={n.href} onClick={handleMobileLinkClick} className="mx-1 mb-1 block rounded-xl px-4 py-3 text-sm font-semibold text-ink-800 transition hover:bg-brand-gradient-soft hover:text-brand-dark last:mb-0">
                     {n.label}
                   </Link>
                 )
