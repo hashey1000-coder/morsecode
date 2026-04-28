@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
 import { LOGO_URL } from '@/lib/site';
 
@@ -66,13 +64,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
-
-  // Close menu whenever the route changes
-  useEffect(() => {
-    setMenuOpen(false);
-    setOpenSection(null);
-  }, [pathname]);
 
   // Close menu on outside click
   useEffect(() => {
@@ -96,7 +87,7 @@ export default function Header() {
       event.preventDefault();
       close();
 
-      if (href === pathname) {
+      if (href === window.location.pathname) {
         return;
       }
 
@@ -109,7 +100,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 backdrop-blur-xl bg-white/75 border-b border-white/60 shadow-[0_1px_0_0_rgba(15,23,42,0.04),0_8px_24px_-8px_rgba(15,23,42,0.08)]">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4">
-        <Link href="/" onClick={close} className="flex min-w-0 items-center gap-3 shrink group">
+        <a href="/" onClick={close} className="flex min-w-0 items-center gap-3 shrink group">
           <span className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-gradient shadow-glow ring-1 ring-white/40 transition-transform group-hover:scale-105">
             <img
               src={LOGO_URL}
@@ -124,14 +115,14 @@ export default function Header() {
             <span className="max-w-[10.75rem] truncate font-display text-sm font-extrabold tracking-tight text-ink-900 sm:max-w-none sm:text-[15px]">Morse Code Translator</span>
             <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-500 md:block">· — · ·  Translate · Learn · Play</span>
           </span>
-        </Link>
+        </a>
 
         {/* Desktop nav with CSS-only hover dropdowns */}
         <nav className="hidden lg:flex items-center gap-0.5 flex-1 justify-end">
           {NAV.map((n) =>
             n.children ? (
               <div key={n.href} className="relative group">
-                <Link
+                <a
                   href={n.href}
                   className="flex items-center gap-1 px-3 py-2 text-[13px] font-semibold text-ink-700 hover:text-brand-dark hover:bg-white/80 rounded-lg whitespace-nowrap transition"
                 >
@@ -139,33 +130,33 @@ export default function Header() {
                   <svg className="w-3 h-3 opacity-50 shrink-0 transition-transform group-hover:rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 9l-7 7-7-7" />
                   </svg>
-                </Link>
+                </a>
                 <div className="absolute right-0 top-full pt-2 invisible group-hover:visible opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all duration-150 z-50">
                   <div className="bg-white/95 backdrop-blur-xl border border-white/80 ring-1 ring-ink-900/5 rounded-2xl shadow-2xl py-2 min-w-[260px]">
-                    <Link href={n.href} className="block px-4 py-2 text-sm font-bold text-brand-dark hover:bg-brand-gradient-soft rounded-lg mx-1">
+                    <a href={n.href} className="block px-4 py-2 text-sm font-bold text-brand-dark hover:bg-brand-gradient-soft rounded-lg mx-1">
                       All {n.label} →
-                    </Link>
+                    </a>
                     <div className="my-1 mx-3 h-px bg-gradient-to-r from-transparent via-ink-300/40 to-transparent" />
                     {n.children.map((c) => (
-                      <Link
+                      <a
                         key={c.href}
                         href={c.href}
                         className="block px-4 py-1.5 text-sm text-ink-700 hover:text-brand-dark hover:bg-brand-gradient-soft rounded-lg mx-1"
                       >
                         {c.label}
-                      </Link>
+                      </a>
                     ))}
                   </div>
                 </div>
               </div>
             ) : (
-              <Link
+              <a
                 key={n.href}
                 href={n.href}
                 className="px-3 py-2 text-[13px] font-semibold text-ink-700 hover:text-brand-dark hover:bg-white/80 rounded-lg whitespace-nowrap transition"
               >
                 {n.label}
-              </Link>
+              </a>
             )
           )}
         </nav>
