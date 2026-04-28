@@ -35,5 +35,5 @@ jobs:
 
       - name: Upload files
         run: |
-          scp -r site/out/* \
+          scp -r site/out/. \
           ${{ secrets.CPANEL_USER }}@${{ secrets.CPANEL_HOST }}:${{ secrets.CPANEL_TARGET_DIR }}
