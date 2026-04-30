@@ -63,7 +63,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={10} />}
+      {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={100} />}
 
       {yoastGraph && (
         <script

@@ -191,7 +191,7 @@ function normalizeArticleCardExcerpts(html: string): string {
   );
 }
 
-function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
+function injectLazyAdRepeaters(html: string, maxRepeaters = 100): string {
   // Count injectable content blocks to see if there's enough content
   const blockCount =
     (html.match(/<\/p>/gi)?.length ?? 0) +
@@ -369,7 +369,7 @@ export function processHtml(html: string, options: ProcessHtmlOptions = {}): str
   out = transformFaqAccordions(out);
 
   if (options.injectLazyAds) {
-    out = injectLazyAdRepeaters(out, options.maxLazyRepeaters ?? 3);
+    out = injectLazyAdRepeaters(out, options.maxLazyRepeaters ?? 100);
   }
 
   // 11. Normalise stray invalid <br> variants

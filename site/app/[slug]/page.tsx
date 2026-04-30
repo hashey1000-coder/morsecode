@@ -56,7 +56,7 @@ export default async function DynamicPage(
       { name: entry.title, item: `${SITE_URL}/${entry.slug}/` },
     ],
   });
-  const maxLazyRepeaters = entry.type === 'post' || isArticleLikeEntry(entry) ? 8 : 6;
+  const maxLazyRepeaters = 100;
 
   return (
     <article className={`py-10 ${entry.type === 'post' ? 'is-post-page' : 'is-page-entry'}`}>
