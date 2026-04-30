@@ -206,7 +206,6 @@ function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
 
     if (
       headingIndex < 2 ||
-      headingIndex % 2 !== 0 ||
       repeaterIndex >= maxRepeaters ||
       /Frequently Asked Questions/i.test(match)
     ) {
