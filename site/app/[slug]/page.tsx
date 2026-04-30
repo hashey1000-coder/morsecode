@@ -81,15 +81,12 @@ export default async function DynamicPage(
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-ink-950 mb-6">{entry.title}</h1>
           <p className="text-base sm:text-lg text-ink-700 max-w-3xl mb-6">Upload a clear Morse image below to decode the symbols into text directly in your browser.</p>
           <MorseImageTranslator />
-          <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
         </section>
       )}
 
       <div id={AD_UNIT_IDS.inContentLazy} />
 
       <WpContent html={pageHtml} withInContentAds maxLazyRepeaters={maxLazyRepeaters} />
-
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {entry.type === 'post' && <PostNav slug={entry.slug} />}
 

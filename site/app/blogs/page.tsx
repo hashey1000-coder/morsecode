@@ -129,7 +129,6 @@ export default function BlogsIndexPage() {
             </div>
           </>
         )}
-        <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(yoastGraph) }} />
     </>

@@ -58,17 +58,12 @@ export default function HomePage() {
               adjustable speed, and one-click MP3 export.
             </p>
           </div>
-          <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
           <MorseTranslator />
           <div id={AD_UNIT_IDS.inContentLazy} />
         </div>
       </section>
 
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
-
       {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={5} />}
-
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {yoastGraph && (
         <script

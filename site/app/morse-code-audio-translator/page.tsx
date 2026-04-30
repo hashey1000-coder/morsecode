@@ -334,8 +334,6 @@ export default function MorseCodeAudioTranslatorPage() {
 
       <WpContent html={CONTENT_HTML} withInContentAds maxLazyRepeaters={4} />
 
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
-
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(yoastGraph) }} />
     </article>
   );

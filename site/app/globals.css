@@ -3,6 +3,15 @@
 @tailwind utilities;
 
 /* =====================================================================
+   Ad unit spacing
+   ===================================================================== */
+[id^="Morse-codetranslator_"],
+div.lazy[parent-unit] {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* =====================================================================
    Suppress Tailwind base resets that break rendered WP content
    ===================================================================== */
 @layer base {

@@ -64,8 +64,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col bg-[#f4f6fb] text-ink-900 antialiased">
         <div className="page-bg-decor" aria-hidden="true" />
-        <div id={AD_UNIT_IDS.anchor} />
         <Header />
+        <div id={AD_UNIT_IDS.anchor} />
         <div id={AD_UNIT_IDS.topLeaderboard} />
         <main className="flex-1 relative z-10">{children}</main>
         <div id={AD_UNIT_IDS.bottom} />
