@@ -65,7 +65,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col bg-[#f4f6fb] text-ink-900 antialiased">
         <div className="page-bg-decor" aria-hidden="true" />
-        <div id={AD_UNIT_IDS.anchor} className="wp-ad-anchor-slot" />
         <Header />
         <AdSlot id={AD_UNIT_IDS.topLeaderboard} variant="top" />
         <main className="flex-1 relative z-10">{children}</main>

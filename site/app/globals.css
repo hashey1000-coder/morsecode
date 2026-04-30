@@ -44,16 +44,6 @@ body {
   padding: 0 1rem;
   position: relative;
   z-index: 10;
-  display: none;
-}
-
-.wp-ad-slot:has(.wp-ad-raw:not(:empty)),
-.wp-ad-slot:has(.wp-ad-raw iframe),
-.wp-ad-slot:has(.wp-ad-raw ins),
-.wp-ad-slot:has(.wp-ad-raw > div),
-.wp-ad-slot:has(.wp-ad-raw > span),
-.wp-ad-slot:has(script:not(:empty)) {
-  display: block;
 }
 
 .wp-ad-slot-top {
@@ -80,10 +70,6 @@ body {
   display: block;
   width: 100%;
   min-height: 90px;
-}
-
-.wp-ad-raw:empty {
-  min-height: 0;
 }
 
 /* Fixed decorative page background */
