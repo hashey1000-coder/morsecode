@@ -8,5 +8,5 @@ export const AD_UNIT_IDS = {
 } as const;
 
 export function buildLazyRepeaterMarkup(index: number): string {
-  return `<div class="wp-ad-slot wp-ad-slot-inline" data-ad-repeater="${index}"><div class="lazy wp-ad-raw" parent-unit="${AD_UNIT_IDS.inContentLazy}"></div></div>`;
+  return `<div class="lazy" parent-unit="${AD_UNIT_IDS.inContentLazy}" data-ad-repeater="${index}"></div>`;
 }

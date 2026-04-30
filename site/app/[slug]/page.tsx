@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import AdSlot from '@/components/AdSlot';
 import MorseImageTranslator from '@/components/MorseImageTranslator';
 import WpContent from '@/components/WpContent';
 import { AD_UNIT_IDS } from '@/lib/ads';
@@ -77,22 +76,22 @@ export default async function DynamicPage(
         <span className="text-ink-900 font-bold truncate max-w-xs">{entry.title}</span>
       </nav>
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-6" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {slug === 'morse-code-image-translator' && (
         <section className="max-w-6xl mx-auto px-5 mb-8">
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-ink-950 mb-6">{entry.title}</h1>
           <p className="text-base sm:text-lg text-ink-700 max-w-3xl mb-6">Upload a clear Morse image below to decode the symbols into text directly in your browser.</p>
           <MorseImageTranslator />
-          <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-8" />
+          <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
         </section>
       )}
 
-      <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" />
+      <div id={AD_UNIT_IDS.inContentLazy} />
 
       <WpContent html={pageHtml} withInContentAds maxLazyRepeaters={maxLazyRepeaters} />
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-2" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {entry.type === 'post' && <PostNav slug={entry.slug} />}
 

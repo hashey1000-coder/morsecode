@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import AdSlot from '@/components/AdSlot';
 import MorseAudioVoiceTranslator from '@/components/MorseAudioVoiceTranslator';
 import WpContent from '@/components/WpContent';
 import { AD_UNIT_IDS } from '@/lib/ads';
@@ -325,7 +324,7 @@ export default function MorseCodeAudioTranslatorPage() {
         <span className="text-ink-900 font-bold truncate max-w-xs">Morse Code Audio Translator</span>
       </nav>
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-6" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       <section className="max-w-6xl mx-auto px-5 mb-8">
         <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-ink-950 mb-6">Morse Code Audio Translator</h1>
@@ -333,11 +332,11 @@ export default function MorseCodeAudioTranslatorPage() {
         <MorseAudioVoiceTranslator />
       </section>
 
-      <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" />
+      <div id={AD_UNIT_IDS.inContentLazy} />
 
       <WpContent html={CONTENT_HTML} withInContentAds maxLazyRepeaters={4} />
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-2" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(yoastGraph) }} />
     </article>

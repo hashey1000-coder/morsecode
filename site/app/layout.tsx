@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Inter, Sora, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
-import AdSlot from '@/components/AdSlot';
 import AuthorBio from '@/components/AuthorBio';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -65,10 +64,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col bg-[#f4f6fb] text-ink-900 antialiased">
         <div className="page-bg-decor" aria-hidden="true" />
+        <div id={AD_UNIT_IDS.anchor} />
         <Header />
-        <AdSlot id={AD_UNIT_IDS.topLeaderboard} variant="top" />
+        <div id={AD_UNIT_IDS.topLeaderboard} />
         <main className="flex-1 relative z-10">{children}</main>
-        <AdSlot id={AD_UNIT_IDS.bottom} variant="bottom" />
+        <div id={AD_UNIT_IDS.bottom} />
         <AuthorBio />
         <Footer />
       </body>

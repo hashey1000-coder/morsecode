@@ -29,49 +29,6 @@ body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
 }
 
-.wp-ad-anchor-slot {
-  position: relative;
-  z-index: 40;
-}
-
-.wp-ad-anchor-slot:empty {
-  display: none;
-}
-
-.wp-ad-slot {
-  max-width: 72rem;
-  margin: 1rem auto 0;
-  padding: 0 1rem;
-  position: relative;
-  z-index: 10;
-}
-
-.wp-ad-slot-top {
-  margin-top: 0.75rem;
-}
-
-.wp-ad-slot-bottom {
-  margin-top: 2rem;
-  margin-bottom: 0.5rem;
-}
-
-.wp-ad-slot-inline {
-  max-width: 72rem;
-  margin-top: 1.5rem;
-}
-
-.wp-content .wp-ad-slot-inline {
-  max-width: 70ch;
-  margin: 2rem auto;
-  padding: 0;
-}
-
-.wp-ad-raw {
-  display: block;
-  width: 100%;
-  min-height: 90px;
-}
-
 /* Fixed decorative page background */
 .page-bg-decor {
   position: fixed;

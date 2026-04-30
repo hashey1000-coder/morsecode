@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import AdSlot from '@/components/AdSlot';
 import { AD_UNIT_IDS } from '@/lib/ads';
 import { getAllPosts } from '@/lib/content';
 import { buildExcerpt } from '@/lib/html';
@@ -64,7 +63,7 @@ export default function BlogsIndexPage() {
             Articles, guides, and translations covering everything Morse code.
           </p>
         </div>
-        <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-8" />
+        <div id={AD_UNIT_IDS.inContentLazy} />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {featuredPosts.map((p) => (
             <Link
@@ -97,7 +96,7 @@ export default function BlogsIndexPage() {
         </div>
         {remainingPosts.length > 0 && (
           <>
-            <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="my-8" />
+            <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {remainingPosts.map((p) => (
                 <Link
@@ -130,7 +129,7 @@ export default function BlogsIndexPage() {
             </div>
           </>
         )}
-        <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-8" />
+        <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(yoastGraph) }} />
     </>

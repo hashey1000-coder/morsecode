@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import AdSlot from '@/components/AdSlot';
 import MorseTranslator from '@/components/MorseTranslator';
 import WpContent from '@/components/WpContent';
 import { AD_UNIT_IDS } from '@/lib/ads';
@@ -59,17 +58,17 @@ export default function HomePage() {
               adjustable speed, and one-click MP3 export.
             </p>
           </div>
-          <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-8" />
+          <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
           <MorseTranslator />
-          <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-8" />
+          <div id={AD_UNIT_IDS.inContentLazy} />
         </div>
       </section>
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={5} />}
 
-      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-2" />
+      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
 
       {yoastGraph && (
         <script
