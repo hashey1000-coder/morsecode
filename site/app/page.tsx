@@ -61,10 +61,11 @@ export default function HomePage() {
           </div>
           <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-8" />
           <MorseTranslator />
+          <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-8" />
         </div>
       </section>
 
-      <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" />
+      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" />
 
       {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={5} />}
 

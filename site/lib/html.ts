@@ -194,7 +194,7 @@ function normalizeArticleCardExcerpts(html: string): string {
 function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
   const headingCount = html.match(/<h2\b/gi)?.length ?? 0;
 
-  if (headingCount < 4) {
+  if (headingCount < 2) {
     return html;
   }
 
@@ -206,7 +206,7 @@ function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
 
     if (
       headingIndex < 2 ||
-      headingIndex % 3 !== 0 ||
+      headingIndex % 2 !== 0 ||
       repeaterIndex >= maxRepeaters ||
       /Frequently Asked Questions/i.test(match)
     ) {
