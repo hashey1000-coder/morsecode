@@ -1,6 +1,8 @@
 import type { Metadata } from 'next';
+import AdSlot from '@/components/AdSlot';
 import MorseTranslator from '@/components/MorseTranslator';
 import WpContent from '@/components/WpContent';
+import { AD_UNIT_IDS } from '@/lib/ads';
 import { getPageBySlug } from '@/lib/content';
 import { buildMetadata } from '@/lib/metadata';
 import { buildEntryYoastGraph } from '@/lib/schema';
@@ -57,11 +59,16 @@ export default function HomePage() {
               adjustable speed, and one-click MP3 export.
             </p>
           </div>
+          <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-8" />
           <MorseTranslator />
         </div>
       </section>
 
-      {home && <WpContent html={home.html} />}
+      <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" />
+
+      {home && <WpContent html={home.html} withInContentAds maxLazyRepeaters={5} />}
+
+      <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-2" />
 
       {yoastGraph && (
         <script

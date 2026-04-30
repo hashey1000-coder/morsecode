@@ -1,3 +1,4 @@
+import { buildLazyRepeaterMarkup } from './ads';
 import { LOCAL_UPLOADS_PATH, withBasePath } from './site';
 
 const LIVE_RELATED_BLOGS_BLOCK = String.raw`<h2>Related Blogs</h2>				
@@ -190,10 +191,42 @@ function normalizeArticleCardExcerpts(html: string): string {
   );
 }
 
+function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
+  const headingCount = html.match(/<h2\b/gi)?.length ?? 0;
+
+  if (headingCount < 4) {
+    return html;
+  }
+
+  let headingIndex = 0;
+  let repeaterIndex = 0;
+
+  return html.replace(/(<h2\b[^>]*>[\s\S]*?<\/h2>)/gi, (match) => {
+    headingIndex += 1;
+
+    if (
+      headingIndex < 2 ||
+      headingIndex % 3 !== 0 ||
+      repeaterIndex >= maxRepeaters ||
+      /Frequently Asked Questions/i.test(match)
+    ) {
+      return match;
+    }
+
+    repeaterIndex += 1;
+    return `${match}${buildLazyRepeaterMarkup(repeaterIndex)}`;
+  });
+}
+
+type ProcessHtmlOptions = {
+  injectLazyAds?: boolean;
+  maxLazyRepeaters?: number;
+};
+
 /**
  * Post-process WordPress HTML to make it work in our React app.
  */
-export function processHtml(html: string): string {
+export function processHtml(html: string, options: ProcessHtmlOptions = {}): string {
   let out = html;
 
   out = normalizeRelatedBlogsTail(out);
@@ -325,6 +358,10 @@ export function processHtml(html: string): string {
 
   // 10a. Convert FAQ sections into accessible accordions.
   out = transformFaqAccordions(out);
+
+  if (options.injectLazyAds) {
+    out = injectLazyAdRepeaters(out, options.maxLazyRepeaters ?? 3);
+  }
 
   // 11. Normalise stray invalid <br> variants
   out = out.replace(/<\/br>/gi, '<br />');

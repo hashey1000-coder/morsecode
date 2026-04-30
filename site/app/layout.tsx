@@ -2,9 +2,11 @@ import type { Metadata } from 'next';
 import { Inter, Sora, JetBrains_Mono } from 'next/font/google';
 import Script from 'next/script';
 import './globals.css';
+import AdSlot from '@/components/AdSlot';
 import AuthorBio from '@/components/AuthorBio';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import { ADS_SCRIPT_SRC, AD_UNIT_IDS } from '@/lib/ads';
 import { LOGO_ABSOLUTE_URL, NOINDEX, SITE_DESCRIPTION, SITE_NAME, SITE_URL, withBasePath } from '@/lib/site';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter', display: 'swap' });
@@ -51,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src="https://www.googletagmanager.com/gtag/js?id=G-RRLGT55EF1"
           strategy="afterInteractive"
         />
+        <Script src={ADS_SCRIPT_SRC} strategy="lazyOnload" />
         <Script id="google-analytics" strategy="afterInteractive">
           {`
             window.dataLayer = window.dataLayer || [];
@@ -62,8 +65,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="min-h-screen flex flex-col bg-[#f4f6fb] text-ink-900 antialiased">
         <div className="page-bg-decor" aria-hidden="true" />
+        <div id={AD_UNIT_IDS.anchor} className="wp-ad-anchor-slot" />
         <Header />
+        <AdSlot id={AD_UNIT_IDS.topLeaderboard} variant="top" />
         <main className="flex-1 relative z-10">{children}</main>
+        <AdSlot id={AD_UNIT_IDS.bottom} variant="bottom" />
         <AuthorBio />
         <Footer />
       </body>

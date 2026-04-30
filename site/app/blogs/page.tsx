@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import AdSlot from '@/components/AdSlot';
+import { AD_UNIT_IDS } from '@/lib/ads';
 import { getAllPosts } from '@/lib/content';
 import { buildExcerpt } from '@/lib/html';
 import { buildRobotsContent, estimateReadingTime } from '@/lib/metadata';
@@ -36,6 +38,8 @@ export const metadata: Metadata = {
 
 export default function BlogsIndexPage() {
   const posts = getAllPosts();
+  const featuredPosts = posts.slice(0, 6);
+  const remainingPosts = posts.slice(6);
   const yoastGraph = buildYoastGraph({
     url: `${SITE_URL}/blogs/`,
     title: BLOGS_TITLE,
@@ -60,8 +64,9 @@ export default function BlogsIndexPage() {
             Articles, guides, and translations covering everything Morse code.
           </p>
         </div>
+        <AdSlot id={AD_UNIT_IDS.inContentLazy} variant="inline" className="mb-8" />
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.map((p) => (
+          {featuredPosts.map((p) => (
             <Link
               key={p.slug}
               href={`/${p.slug}/`}
@@ -90,6 +95,42 @@ export default function BlogsIndexPage() {
             </Link>
           ))}
         </div>
+        {remainingPosts.length > 0 && (
+          <>
+            <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="my-8" />
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {remainingPosts.map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/${p.slug}/`}
+                  className="group block bg-white rounded-2xl border border-ink-300/30 ring-1 ring-ink-900/5 overflow-hidden shadow-soft hover:shadow-glow hover:-translate-y-1 transition-all duration-200"
+                >
+                  {p.featuredImage && (
+                    <div className="relative overflow-hidden aspect-[16/10] bg-brand-gradient-soft">
+                      <img
+                        src={localizeUploadUrl(p.featuredImage)}
+                        alt={p.title}
+                        className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-ink-900/50 via-transparent to-transparent opacity-60" />
+                    </div>
+                  )}
+                  <div className="p-5">
+                    <h2 className="font-display font-bold text-lg text-ink-900 group-hover:text-brand transition leading-snug">{p.title}</h2>
+                    <p className="text-sm text-ink-700 mt-2 line-clamp-3 leading-relaxed">
+                      {(p.excerpt && p.excerpt.replace(/<[^>]+>/g, '').trim()) || buildExcerpt(p.html, 140)}
+                    </p>
+                    <span className="mt-4 inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider text-brand group-hover:gap-2 transition-all">
+                      Read More <span aria-hidden>→</span>
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </>
+        )}
+        <AdSlot lazyParentUnit={AD_UNIT_IDS.inContentLazy} variant="inline" className="mt-8" />
       </section>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(yoastGraph) }} />
     </>
