@@ -84,8 +84,6 @@ export default async function DynamicPage(
         </section>
       )}
 
-      <div id={AD_UNIT_IDS.inContentLazy} />
-
       <WpContent html={pageHtml} withInContentAds maxLazyRepeaters={maxLazyRepeaters} />
 
       {entry.type === 'post' && <PostNav slug={entry.slug} />}
