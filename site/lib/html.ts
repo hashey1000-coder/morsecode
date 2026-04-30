@@ -192,57 +192,39 @@ function normalizeArticleCardExcerpts(html: string): string {
 }
 
 function injectLazyAdRepeaters(html: string, maxRepeaters = 3): string {
-  const headingCount = html.match(/<h2\b/gi)?.length ?? 0;
-  const imageCount = html.match(/<img\b[^>]*class="wp-img"/gi)?.length ?? 0;
+  // Count injectable content blocks to see if there's enough content
+  const blockCount =
+    (html.match(/<\/p>/gi)?.length ?? 0) +
+    (html.match(/<\/ul>|<\/ol>/gi)?.length ?? 0) +
+    (html.match(/<img\b[^>]*class="wp-img"/gi)?.length ?? 0) +
+    (html.match(/<\/table>/gi)?.length ?? 0);
 
-  if (headingCount < 2 && imageCount === 0) {
-    return html;
-  }
+  if (blockCount < 4) return html;
 
-  let headingIndex = 0;
   let repeaterIndex = 0;
-  // Track position of last injection to avoid placing two ads close together
-  let lastInjectionIndex = -4;
-  let contentIndex = 0;
+  let blocksSinceLastAd = 0;
+  const AD_EVERY_N_BLOCKS = 4;
 
-  // Pass 1: inject after h2 headings (skipping first, skipping FAQ)
-  let out = html.replace(/(<h2\b[^>]*>[\s\S]*?<\/h2>)/gi, (match) => {
-    headingIndex += 1;
-    contentIndex += 1;
+  // Replace closing tags of content blocks, counting each one and
+  // injecting an ad after every AD_EVERY_N_BLOCKS blocks.
+  return html.replace(
+    /(<\/p>|<\/ul>|<\/ol>|<\/table>|(<img\b[^>]*class="wp-img"[^>]*\/?>))/gi,
+    (match) => {
+      // Don't inject inside FAQ section
+      blocksSinceLastAd += 1;
 
-    if (
-      headingIndex < 2 ||
-      repeaterIndex >= maxRepeaters ||
-      /Frequently Asked Questions/i.test(match)
-    ) {
-      return match;
-    }
+      if (
+        repeaterIndex >= maxRepeaters ||
+        blocksSinceLastAd < AD_EVERY_N_BLOCKS
+      ) {
+        return match;
+      }
 
-    lastInjectionIndex = contentIndex;
-    repeaterIndex += 1;
-    return `${match}${buildLazyRepeaterMarkup(repeaterIndex)}`;
-  });
-
-  // Pass 2: inject after standalone wp-img images that aren't already
-  // close to a heading-based ad (gap of at least 3 content blocks away)
-  let imgIndex = 0;
-  out = out.replace(/(<img\b[^>]*class="wp-img"[^>]*\/?>)/gi, (match) => {
-    imgIndex += 1;
-    contentIndex += 1;
-
-    if (
-      repeaterIndex >= maxRepeaters ||
-      contentIndex - lastInjectionIndex < 3
-    ) {
-      return match;
-    }
-
-    lastInjectionIndex = contentIndex;
-    repeaterIndex += 1;
-    return `${match}${buildLazyRepeaterMarkup(repeaterIndex)}`;
-  });
-
-  return out;
+      blocksSinceLastAd = 0;
+      repeaterIndex += 1;
+      return `${match}${buildLazyRepeaterMarkup(repeaterIndex)}`;
+    },
+  );
 }
 
 type ProcessHtmlOptions = {
