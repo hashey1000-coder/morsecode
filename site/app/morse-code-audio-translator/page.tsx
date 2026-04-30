@@ -324,8 +324,6 @@ export default function MorseCodeAudioTranslatorPage() {
         <span className="text-ink-900 font-bold truncate max-w-xs">Morse Code Audio Translator</span>
       </nav>
 
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
-
       <section className="max-w-6xl mx-auto px-5 mb-8">
         <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-ink-950 mb-6">Morse Code Audio Translator</h1>
         <p className="text-base sm:text-lg text-ink-700 max-w-3xl mb-6">Use the tool below to speak into your microphone or upload Morse audio, then review, play, and refine the results in your browser.</p>

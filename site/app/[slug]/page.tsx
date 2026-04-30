@@ -76,8 +76,6 @@ export default async function DynamicPage(
         <span className="text-ink-900 font-bold truncate max-w-xs">{entry.title}</span>
       </nav>
 
-      <div className="lazy" parent-unit={AD_UNIT_IDS.inContentLazy} />
-
       {slug === 'morse-code-image-translator' && (
         <section className="max-w-6xl mx-auto px-5 mb-8">
           <h1 className="font-display text-4xl sm:text-5xl font-black tracking-tight text-ink-950 mb-6">{entry.title}</h1>
