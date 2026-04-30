@@ -11,6 +11,12 @@ div.lazy[parent-unit] {
   margin-bottom: 20px;
 }
 
+/* Pre-reserve space for the top leaderboard so page content doesn't
+   shift down when the ad loads after navigation */
+#Morse-codetranslator_Top_Leaderboard_ATF {
+  min-height: 90px;
+}
+
 /* =====================================================================
    Suppress Tailwind base resets that break rendered WP content
    ===================================================================== */
