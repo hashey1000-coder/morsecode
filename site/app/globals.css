@@ -10,11 +10,27 @@ div.lazy[parent-unit] {
   display: flex;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
   margin: 20px auto;
   text-align: center;
-  overflow: visible;
+  overflow: hidden;
+}
+
+[id^="Morse-codetranslator_"] *,
+div.lazy[parent-unit] * {
+  box-sizing: border-box;
+  max-width: 100% !important;
+}
+
+[id^="Morse-codetranslator_"] iframe,
+[id^="Morse-codetranslator_"] img,
+[id^="Morse-codetranslator_"] ins,
+div.lazy[parent-unit] iframe,
+div.lazy[parent-unit] img,
+div.lazy[parent-unit] ins {
+  max-width: 100% !important;
 }
 
 /* Pre-reserve space for the top leaderboard so page content doesn't
@@ -38,6 +54,24 @@ div.lazy[parent-unit="Morse-codetranslator_Incontent_Lazy"] {
 }
 
 @media (max-width: 640px) {
+  [id^="Morse-codetranslator_"],
+  div.lazy[parent-unit] {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  [id^="Morse-codetranslator_"] iframe,
+  div.lazy[parent-unit] iframe {
+    width: 100% !important;
+  }
+
+  #Morse-codetranslator_Anchor_ATF {
+    width: 100%;
+    max-width: 100%;
+  }
+
   #Morse-codetranslator_Incontent_Lazy,
   div.lazy[parent-unit="Morse-codetranslator_Incontent_Lazy"] {
     min-height: 280px;
@@ -62,6 +96,7 @@ div.lazy[parent-unit="Morse-codetranslator_Incontent_Lazy"] {
    ===================================================================== */
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -69,6 +104,7 @@ body {
   color: #0b1437;
   font-family: var(--font-inter), Inter, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  overflow-x: hidden;
 }
 
 /* Fixed decorative page background */
