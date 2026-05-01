@@ -192,12 +192,22 @@ function normalizeArticleCardExcerpts(html: string): string {
 }
 
 function injectLazyAdRepeaters(html: string, maxRepeaters = 100): string {
+  const protectedBlocks: string[] = [];
+  const maskedHtml = html.replace(
+    /<(section|div)\b[^>]*class="[^"]*\b(?:wp-faq|wp-articles-grid)\b[^"]*"[^>]*>[\s\S]*?<\/\1>/gi,
+    (block) => {
+      const index = protectedBlocks.length;
+      protectedBlocks.push(block);
+      return `__AD_PROTECTED_BLOCK_${index}__`;
+    },
+  );
+
   // Count injectable content blocks to see if there's enough content
   const blockCount =
-    (html.match(/<\/p>/gi)?.length ?? 0) +
-    (html.match(/<\/ul>|<\/ol>/gi)?.length ?? 0) +
-    (html.match(/<img\b[^>]*class="wp-img"/gi)?.length ?? 0) +
-    (html.match(/<\/table>/gi)?.length ?? 0);
+    (maskedHtml.match(/<\/p>/gi)?.length ?? 0) +
+    (maskedHtml.match(/<\/ul>|<\/ol>/gi)?.length ?? 0) +
+    (maskedHtml.match(/<img\b[^>]*class="wp-img"/gi)?.length ?? 0) +
+    (maskedHtml.match(/<\/table>/gi)?.length ?? 0);
 
   if (blockCount < 4) return html;
 
@@ -206,11 +216,12 @@ function injectLazyAdRepeaters(html: string, maxRepeaters = 100): string {
   const AD_EVERY_N_BLOCKS = 4;
 
   // Replace closing tags of content blocks, counting each one and
-  // injecting an ad after every AD_EVERY_N_BLOCKS blocks.
-  return html.replace(
+  // injecting an ad after every AD_EVERY_N_BLOCKS blocks. FAQ accordions
+  // and related-card grids are masked so ads are not hidden inside closed
+  // UI or nested cards, which hurts viewability and layout quality.
+  const withAds = maskedHtml.replace(
     /(<\/p>|<\/ul>|<\/ol>|<\/table>|(<img\b[^>]*class="wp-img"[^>]*\/?>))/gi,
     (match) => {
-      // Don't inject inside FAQ section
       blocksSinceLastAd += 1;
 
       if (
@@ -225,6 +236,8 @@ function injectLazyAdRepeaters(html: string, maxRepeaters = 100): string {
       return `${match}${buildLazyRepeaterMarkup(repeaterIndex)}`;
     },
   );
+
+  return withAds.replace(/__AD_PROTECTED_BLOCK_(\d+)__/g, (_match, index: string) => protectedBlocks[Number(index)] ?? '');
 }
 
 type ProcessHtmlOptions = {

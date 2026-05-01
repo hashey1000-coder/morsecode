@@ -7,14 +7,41 @@
    ===================================================================== */
 [id^="Morse-codetranslator_"],
 div.lazy[parent-unit] {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+  margin: 20px auto;
+  text-align: center;
+  overflow: visible;
 }
 
 /* Pre-reserve space for the top leaderboard so page content doesn't
    shift down when the ad loads after navigation */
 #Morse-codetranslator_Top_Leaderboard_ATF {
   min-height: 90px;
+}
+
+#Morse-codetranslator_Anchor_ATF {
+  display: block;
+  width: auto;
+  margin: 0;
+  min-height: 0;
+  height: 0;
+}
+
+#Morse-codetranslator_Bottom_BTF,
+#Morse-codetranslator_Incontent_Lazy,
+div.lazy[parent-unit="Morse-codetranslator_Incontent_Lazy"] {
+  min-height: 250px;
+}
+
+@media (max-width: 640px) {
+  #Morse-codetranslator_Incontent_Lazy,
+  div.lazy[parent-unit="Morse-codetranslator_Incontent_Lazy"] {
+    min-height: 280px;
+  }
 }
 
 /* =====================================================================
