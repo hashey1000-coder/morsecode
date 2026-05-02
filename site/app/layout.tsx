@@ -5,6 +5,7 @@ import './globals.css';
 import AuthorBio from '@/components/AuthorBio';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import ScrollToTop from '@/components/ScrollToTop';
 import { ADS_SCRIPT_SRC, AD_UNIT_IDS } from '@/lib/ads';
 import { LOGO_ABSOLUTE_URL, NOINDEX, SITE_DESCRIPTION, SITE_NAME, SITE_URL, withBasePath } from '@/lib/site';
 
@@ -71,6 +72,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div id={AD_UNIT_IDS.bottom} />
         <AuthorBio />
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );
